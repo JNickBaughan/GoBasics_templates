@@ -7,21 +7,26 @@ import (
 	"text/template"
 	"net/http"
 	"github.com/gorilla/mux"
-	"fmt"
 )
 
+var tpl *template.Template
+
+func initTpl() {
+	tpl = template.Must(template.ParseGlob("templates/*.gohtml"))
+}
+
 func handleMainRoute(w http.ResponseWriter, r *http.Request) {
-	tpl, err := template.ParseFiles("index.gohtml")
-	if(err != nil){
-		log.Fatalln(err)
-	}
 
-	//writeFileToStandardOut(tpl , w )
-
-	err = tpl.Execute(w, nil)
+	err := tpl.ExecuteTemplate(w, "index.gohtml", nil)
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
 	}
+}
+
+func handleStandardOut(w http.ResponseWriter, r *http.Request) {
+
+	writeFileToStandardOut(tpl , w )
+
 }
 
 func writeFileToStandardOut(tpl *template.Template, w http.ResponseWriter){
@@ -29,17 +34,17 @@ func writeFileToStandardOut(tpl *template.Template, w http.ResponseWriter){
 	if(err != nil){
 		log.Fatalln(err)
 	}
-	
-	if err != nil {
-		fmt.Fprintf(w, "Uh Oh... looks like something went wrong")
-	}
 }
 
 func main() {
 	
 	router := mux.NewRouter().StrictSlash(true)
 
+	initTpl()
+
 	router.HandleFunc("/", handleMainRoute)
+
+	router.HandleFunc("/standard-out", handleStandardOut)
 
 	log.Fatal(http.ListenAndServe(":3000", router))
 }
