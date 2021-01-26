@@ -16,7 +16,15 @@ func initTpl() {
 }
 
 func handleMainRoute(w http.ResponseWriter, r *http.Request) {
-	err := tpl.ExecuteTemplate(w, "index.gohtml", nil)
+	err := tpl.ExecuteTemplate(w, "index.gohtml", "templates")
+	if err != nil {
+		w.WriteHeader(http.StatusInternalServerError)
+	}
+}
+
+func handleMyDogRoute(w http.ResponseWriter, r *http.Request) {
+	data := []string{"Oliver", "Gibson", "Finn"}
+	err := tpl.ExecuteTemplate(w, "myDogs.gohtml", data)
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
 	}
@@ -36,6 +44,8 @@ func main() {
 	initTpl()
 
 	router.HandleFunc("/", handleMainRoute)
+
+	router.HandleFunc("/my-dogs", handleMyDogRoute)
 
 	router.HandleFunc("/standard-out", handleStandardOut)
 

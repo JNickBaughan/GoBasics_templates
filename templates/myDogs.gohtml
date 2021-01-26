@@ -5,7 +5,10 @@
         <title>Hello GoLang!</title>
     </head>
     <body>
-        <h1>Hello GoLang!</h1>
-        <p>Learning about {{.}} in GoLang</p>
+        <h1>My Dogs</h1>
+        <p>My dogs are</p>
+        {{range .}}
+        <li>{{.}}</li>
+        {{end}}
     </body>
 </html>
