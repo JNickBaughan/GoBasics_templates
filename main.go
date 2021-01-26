@@ -16,7 +16,6 @@ func initTpl() {
 }
 
 func handleMainRoute(w http.ResponseWriter, r *http.Request) {
-
 	err := tpl.ExecuteTemplate(w, "index.gohtml", nil)
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
@@ -24,12 +23,6 @@ func handleMainRoute(w http.ResponseWriter, r *http.Request) {
 }
 
 func handleStandardOut(w http.ResponseWriter, r *http.Request) {
-
-	writeFileToStandardOut(tpl , w )
-
-}
-
-func writeFileToStandardOut(tpl *template.Template, w http.ResponseWriter){
 	err := tpl.Execute(os.Stdout, nil)
 	if(err != nil){
 		log.Fatalln(err)
