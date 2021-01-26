@@ -15,7 +15,17 @@ func handleMainRoute(w http.ResponseWriter, r *http.Request) {
 	if(err != nil){
 		log.Fatalln(err)
 	}
-	err = tpl.Execute(os.Stdout, nil)
+
+	//writeFileToStandardOut(tpl , w )
+
+	err = tpl.Execute(w, nil)
+	if err != nil {
+		w.WriteHeader(http.StatusInternalServerError)
+	}
+}
+
+func writeFileToStandardOut(tpl *template.Template, w http.ResponseWriter){
+	err := tpl.Execute(os.Stdout, nil)
 	if(err != nil){
 		log.Fatalln(err)
 	}
@@ -23,8 +33,6 @@ func handleMainRoute(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		fmt.Fprintf(w, "Uh Oh... looks like something went wrong")
 	}
-	
-	tpl.Execute(w, nil)
 }
 
 func main() {
