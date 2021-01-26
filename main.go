@@ -1,12 +1,11 @@
 package main
 
-
 import (
+	"github.com/gorilla/mux"
 	"log"
+	"net/http"
 	"os"
 	"text/template"
-	"net/http"
-	"github.com/gorilla/mux"
 )
 
 var tpl *template.Template
@@ -32,13 +31,13 @@ func handleMyDogRoute(w http.ResponseWriter, r *http.Request) {
 
 func handleStandardOut(w http.ResponseWriter, r *http.Request) {
 	err := tpl.Execute(os.Stdout, nil)
-	if(err != nil){
+	if err != nil {
 		log.Fatalln(err)
 	}
 }
 
 func main() {
-	
+
 	router := mux.NewRouter().StrictSlash(true)
 
 	initTpl()
