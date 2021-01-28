@@ -8,6 +8,11 @@ import (
 	"text/template"
 )
 
+type frenchBulldog struct {
+	Name string
+	NickName string
+}
+
 var tpl *template.Template
 
 func initTpl() {
@@ -22,7 +27,20 @@ func handleMainRoute(w http.ResponseWriter, r *http.Request) {
 }
 
 func handleMyDogRoute(w http.ResponseWriter, r *http.Request) {
-	data := []string{"Oliver", "Gibson", "Finn"}
+	data := []frenchBulldog{
+		frenchBulldog{
+			Name: "Oliver",
+			NickName: "Stinks",
+		},
+		frenchBulldog{
+			Name: "Gibson",
+			NickName: "Monster",
+		},
+		frenchBulldog{
+			Name: "Finnegan",
+			NickName: "Nugget",
+		},
+		}
 	err := tpl.ExecuteTemplate(w, "myDogs.gohtml", data)
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)

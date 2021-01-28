@@ -7,8 +7,12 @@
     <body>
         <h1>My Dogs</h1>
         <p>My dogs are</p>
-        {{range .}}
-        <li>{{.}}</li>
+        <br/>
+        <br/>
+        {{range $index, $element := .}}
+        <p>Name: {{$element.Name}}</p>
+        <p>AKA: {{$element.NickName}}</p>
+        <br/>
         {{end}}
         <br/>
         <a href="/">Back home</a>
