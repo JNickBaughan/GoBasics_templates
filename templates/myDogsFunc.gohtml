@@ -10,13 +10,13 @@
         <br/>
         <br/>
         {{range $index, $element := .}}
-        <p>Name: {{$element.Name}}</p>
+        <p>Name: {{ToUpper $element.Name}}</p>
         <p>AKA: {{$element.NickName}}</p>
         <br/>
         {{end}}
         <br/>
-        <a href="/">Back home</a>
+        <a href="/my-dogs">See my Dogs</a>
         <br/>
-        <a href="/my-dogs-upper">Upper</a>
+        <a href="/">Back home</a>
     </body>
 </html>

@@ -6,6 +6,7 @@ import (
 	"net/http"
 	"os"
 	"text/template"
+	"strings"
 )
 
 type frenchBulldog struct {
@@ -13,20 +14,7 @@ type frenchBulldog struct {
 	NickName string
 }
 
-var tpl *template.Template
-
-func initTpl() {
-	tpl = template.Must(template.ParseGlob("templates/*.gohtml"))
-}
-
-func handleMainRoute(w http.ResponseWriter, r *http.Request) {
-	err := tpl.ExecuteTemplate(w, "index.gohtml", "templates")
-	if err != nil {
-		w.WriteHeader(http.StatusInternalServerError)
-	}
-}
-
-func handleMyDogRoute(w http.ResponseWriter, r *http.Request) {
+func getData() []frenchBulldog {
 	data := []frenchBulldog{
 		frenchBulldog{
 			Name: "Oliver",
@@ -40,8 +28,38 @@ func handleMyDogRoute(w http.ResponseWriter, r *http.Request) {
 			Name: "Finnegan",
 			NickName: "Nugget",
 		},
-		}
-	err := tpl.ExecuteTemplate(w, "myDogs.gohtml", data)
+	}
+	return data
+}
+
+var templateFunctions = template.FuncMap{
+	"ToUpper": strings.ToUpper,
+}
+
+var tpl *template.Template
+
+func initTpl() {
+	//tpl = template.Must(template.ParseGlob("templates/*.gohtml"))
+	tpl = template.Must(template.New("").Funcs(templateFunctions).ParseGlob("templates/*.gohtml"))
+}
+
+func handleMainRoute(w http.ResponseWriter, r *http.Request) {
+	err := tpl.ExecuteTemplate(w, "index.gohtml", "templates")
+	if err != nil {
+		w.WriteHeader(http.StatusInternalServerError)
+	}
+}
+
+func handleMyDogRoute(w http.ResponseWriter, r *http.Request) {
+	err := tpl.ExecuteTemplate(w, "myDogs.gohtml", getData())
+	if err != nil {
+		w.WriteHeader(http.StatusInternalServerError)
+	}
+}
+
+func handleMyDogUpperRoute(w http.ResponseWriter, r *http.Request) {
+
+	err := tpl.ExecuteTemplate(w, "myDogsFunc.gohtml", getData())
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
 	}
@@ -63,6 +81,8 @@ func main() {
 	router.HandleFunc("/", handleMainRoute)
 
 	router.HandleFunc("/my-dogs", handleMyDogRoute)
+
+	router.HandleFunc("/my-dogs-upper", handleMyDogUpperRoute)
 
 	router.HandleFunc("/standard-out", handleStandardOut)
 
